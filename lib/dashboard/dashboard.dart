@@ -1,4 +1,6 @@
 import 'package:dashboard_slider/dashboard/model/ItemModel.dart';
+import 'package:dashboard_slider/dashboard/model/slider_model.dart';
+import 'package:dashboard_slider/dashboard/my_slider_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,17 +8,20 @@ import '../common/my_app_bar.dart';
 import 'item_row.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard(
-      {super.key,
-      required this.sliderCardHeight,
-      required this.pageTitle,
-      required this.itemModels,
-      required this.onItemSelected});
+  const Dashboard({super.key,
+    required this.sliderCardHeight,
+    required this.pageTitle,
+    required this.sliderModels,
+    required this.onSliderSelected,
+    required this.itemModels,
+    required this.onItemSelected});
 
   final String pageTitle;
   final double sliderCardHeight;
+  final List<SliderModel> sliderModels;
   final List<ItemModel> itemModels;
 
+  final Function(SliderModel) onSliderSelected;
   final Function(ItemModel) onItemSelected;
 
   @override
@@ -36,46 +41,19 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             SizedBox(
-              height: widget.sliderCardHeight,
-              child: PageView(
-                controller: _pageController,
-                children: <Widget>[
-                  ColoredBox(
-                    color: Colors.red,
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_pageController.hasClients) {
-                            _pageController.animateToPage(
-                              1,
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        },
-                        child: const Text('Next'),
-                      ),
-                    ),
-                  ),
-                  ColoredBox(
-                    color: Colors.blue,
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_pageController.hasClients) {
-                            _pageController.animateToPage(
-                              0,
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        },
-                        child: const Text('Previous'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                height: widget.sliderCardHeight,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: widget.sliderModels.length,
+                  itemBuilder: (context, index) {
+                    return MySliderItem(sliderModel: widget.sliderModels[index],
+                      onSliderSelected: (sliderModel) {
+                        widget.onSliderSelected.call(sliderModel);
+
+
+                      },);
+                  },
+                ),
             ),
             Card(
               margin: EdgeInsets.all(10.0),

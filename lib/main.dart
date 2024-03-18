@@ -1,4 +1,5 @@
 import 'package:dashboard_slider/dashboard/dashboard.dart';
+import 'package:dashboard_slider/dashboard/model/slider_model.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard/model/ItemModel.dart';
@@ -17,6 +18,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String pageTitle = "Demo";
   double sliderCardHeight = 200;
+
+  List<SliderModel> sliderModels = [
+    SliderModel(Colors.orange, "Slider 1", "0"),
+    SliderModel(Colors.blue, "Slider 2", "1"),
+  ];
+
   List<ItemModel> myList = [
     ItemModel(Icons.account_circle, Colors.indigo, "Title 1", 1, "0"),
     ItemModel(Icons.account_tree, Colors.blue, "Title 2", 5, "1"),
@@ -28,13 +35,16 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Dashboard(
-        pageTitle: pageTitle,
-        sliderCardHeight: sliderCardHeight,
-        itemModels: myList,
-        onItemSelected: (model) {
-          print(model.title);
-        },
-      ),
+          pageTitle: pageTitle,
+          sliderCardHeight: sliderCardHeight,
+          sliderModels: sliderModels,
+          onSliderSelected: (sliderModel) {
+            print(sliderModel.title);
+          },
+          itemModels: myList,
+          onItemSelected: (model) {
+            print(model.title);
+          }),
     );
   }
 }
